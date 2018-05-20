@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.com.shop.system.security.dao.RoleMenuMapper" >
+  <resultMap id="BaseResultMap" type="org.com.shop.system.security.model.RoleMenu" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <id column="role_id" property="roleId" jdbcType="VARCHAR" />
+    <id column="menu_id" property="menuId" jdbcType="VARCHAR" />
+  </resultMap>
+  <delete id="deleteByPrimary" parameterType="org.com.shop.system.security.model.RoleMenu" >
+    delete from role_menu
+    where id = #{id,jdbcType=VARCHAR}
+      and role_id = #{roleId,jdbcType=VARCHAR}
+      and menu_id = #{menuId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="org.com.shop.system.security.model.RoleMenu" >
+    insert into role_menu (id, role_id, menu_id
+      )
+    values (#{id,jdbcType=VARCHAR}, #{roleId,jdbcType=VARCHAR}, #{menuId,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="org.com.shop.system.security.model.RoleMenu" >
+    insert into role_menu
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="roleId != null" >
+        role_id,
+      </if>
+      <if test="menuId != null" >
+        menu_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="roleId != null" >
+        #{roleId,jdbcType=VARCHAR},
+      </if>
+      <if test="menuId != null" >
+        #{menuId,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  
+  <delete id="deleteByRoleId" parameterType="java.lang.String" >
+    delete from role_menu
+    where role_id = #{roleId,jdbcType=VARCHAR}
+   </delete>
+  
+</mapper>

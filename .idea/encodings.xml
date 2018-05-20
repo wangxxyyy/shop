@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding">
+    <file url="file://$PROJECT_DIR$/src/main/java/org/com/shop/common/CommonUtil.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/src/main/java/org/com/shop/system/department/service/impl/DepartmentServiceImpl.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/src/main/java/org/com/shop/system/menu/controller/MenuController.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/src/main/java/org/com/shop/system/security/controller/RoleController.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/src/main/java/org/com/shop/system/user/service/impl/UserServiceImpl.java" charset="GBK" />
+  </component>
+</project>

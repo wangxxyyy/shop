@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.com.shop.business.goods.dao.GoodsClassifyMapper" >
+  <resultMap id="BaseResultMap" type="org.com.shop.business.goods.model.GoodsClassify" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="state" property="state" jdbcType="INTEGER" />
+    <result column="create_user_id" property="createUserId" jdbcType="VARCHAR" />
+    <result column="parent_id" property="parentId" jdbcType="VARCHAR" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="orders" property="orders" jdbcType="INTEGER" />
+    <result column="url" property="url" jdbcType="VARCHAR" />
+    <collection column="id" property="children" select="getChildren"/>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, name, state, create_user_id, parent_id, create_date, orders, url
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from goods_classify
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from goods_classify
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="org.com.shop.business.goods.model.GoodsClassify" >
+    insert into goods_classify (id, name, state, 
+      create_user_id, parent_id, create_date, 
+      orders, url)
+    values (#{id,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{state,jdbcType=INTEGER}, 
+      #{createUserId,jdbcType=VARCHAR}, #{parentId,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP}, 
+      #{orders,jdbcType=INTEGER}, #{url,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="org.com.shop.business.goods.model.GoodsClassify" >
+    insert into goods_classify
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="state != null" >
+        state,
+      </if>
+      <if test="createUserId != null" >
+        create_user_id,
+      </if>
+      <if test="parentId != null" >
+        parent_id,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="orders != null" >
+        orders,
+      </if>
+      <if test="url != null" >
+        url,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="state != null" >
+        #{state,jdbcType=INTEGER},
+      </if>
+      <if test="createUserId != null" >
+        #{createUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="parentId != null" >
+        #{parentId,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="orders != null" >
+        #{orders,jdbcType=INTEGER},
+      </if>
+      <if test="url != null" >
+        #{url,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="org.com.shop.business.goods.model.GoodsClassify" >
+    update goods_classify
+    <set >
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="state != null" >
+        state = #{state,jdbcType=INTEGER},
+      </if>
+      <if test="createUserId != null" >
+        create_user_id = #{createUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="parentId != null" >
+        parent_id = #{parentId,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="orders != null" >
+        orders = #{orders,jdbcType=INTEGER},
+      </if>
+      <if test="url != null" >
+        url = #{url,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="org.com.shop.business.goods.model.GoodsClassify" >
+    update goods_classify
+    set name = #{name,jdbcType=VARCHAR},
+      state = #{state,jdbcType=INTEGER},
+      create_user_id = #{createUserId,jdbcType=VARCHAR},
+      parent_id = #{parentId,jdbcType=VARCHAR},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      orders = #{orders,jdbcType=INTEGER},
+      url = #{url,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+
+  <select id="getChildren" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List" />
+    from goods_classify
+    where parent_id = #{id}
+  </select>
+
+
+  <select id="getList" parameterType="org.com.shop.business.goods.model.GoodsClassify" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List" />
+    from goods_classify
+    where parent_id ='0'
+      <if test="name != null" >
+        and name = #{name,jdbcType=VARCHAR},
+      </if>
+    limit #{start,jdbcType=INTEGER},#{rows,jdbcType=INTEGER}
+  </select>
+
+  <select id="getListCount" parameterType="org.com.shop.business.goods.model.GoodsClassify" resultType="java.lang.Integer">
+    select count(*)
+    from goods_classify
+    <where>
+      <if test="name != null" >
+        and name = #{name,jdbcType=VARCHAR},
+      </if>
+    </where>
+  </select>
+
+  <select id="getListClassify" parameterType="org.com.shop.business.goods.model.GoodsClassify" resultMap="BaseResultMap">
+    select * from goods_classify
+    where parent_id ='0'
+  </select>
+
+  <select id="getClassifyList" parameterType="org.com.shop.business.goods.model.GoodsClassify" resultMap="BaseResultMap">
+    select * from goods_classify
+    where parent_id='0'
+  </select>
+
+</mapper>

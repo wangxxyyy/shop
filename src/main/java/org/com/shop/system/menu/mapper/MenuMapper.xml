@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.com.shop.system.menu.dao.MenuMapper" >
+  <resultMap id="BaseResultMap" type="org.com.shop.system.menu.model.Menu" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="create_user_id" property="createUserId" jdbcType="VARCHAR" />
+    <result column="orders" property="orders" jdbcType="INTEGER" />
+    <result column="state" property="state" jdbcType="INTEGER" />
+    <result property="FLD_DATE" column="FLD_DATE" javaType="java.sql.Date" jdbcType="DATE"/>
+    <result column="url" property="url" jdbcType="VARCHAR" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="parent_id" property="parentId" jdbcType="VARCHAR" />
+    <collection column="id" property="children" select="getChildren"/> 
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, title, create_user_id, orders, state, url, create_date, parent_id
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from menu
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="getLists" parameterType="java.lang.String" >
+    delete from menu
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="org.com.shop.system.menu.model.Menu" >
+    insert into menu (id, title, create_user_id, 
+      orders, state, url, 
+      create_date, parent_id)
+    values (#{id,jdbcType=VARCHAR}, #{title,jdbcType=VARCHAR}, #{createUserId,jdbcType=VARCHAR}, 
+      #{orders,jdbcType=INTEGER}, #{state,jdbcType=INTEGER}, #{url,jdbcType=VARCHAR}, 
+      #{createDate,jdbcType=TIMESTAMP}, #{parentId,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="org.com.shop.system.menu.model.Menu" >
+    insert into menu
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="title != null" >
+        title,
+      </if>
+      <if test="createUserId != null" >
+        create_user_id,
+      </if>
+      <if test="orders != null" >
+        orders,
+      </if>
+      <if test="state != null" >
+        state,
+      </if>
+      <if test="url != null" >
+        url,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="parentId != null" >
+        parent_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="title != null" >
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="createUserId != null" >
+        #{createUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="orders != null" >
+        #{orders,jdbcType=INTEGER},
+      </if>
+      <if test="state != null" >
+        #{state,jdbcType=INTEGER},
+      </if>
+      <if test="url != null" >
+        #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="parentId != null" >
+        #{parentId,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="org.com.shop.system.menu.model.Menu" >
+    update menu
+    <set >
+      <if test="title != null" >
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="createUserId != null" >
+        create_user_id = #{createUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="orders != null" >
+        orders = #{orders,jdbcType=INTEGER},
+      </if>
+      <if test="state != null" >
+        state = #{state,jdbcType=INTEGER},
+      </if>
+      <if test="url != null" >
+        url = #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="parentId != null" >
+        parent_id = #{parentId,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="org.com.shop.system.menu.model.Menu" >
+    update menu
+    set title = #{title,jdbcType=VARCHAR},
+      create_user_id = #{createUserId,jdbcType=VARCHAR},
+      orders = #{orders,jdbcType=INTEGER},
+      state = #{state,jdbcType=INTEGER},
+      url = #{url,jdbcType=VARCHAR},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      parent_id = #{parentId,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  
+  <select id="getList" parameterType="org.com.shop.system.menu.model.Menu" resultMap="BaseResultMap">
+	 select <include refid="Base_Column_List" /> 
+	 from menu
+	 where parent_id ='0'
+ 	 <if test="title != null and title !=''">
+ 	 	and title = #{title,jdbcType=VARCHAR}
+ 	 </if>
+  </select>
+  
+  <select id="getChildren" resultMap="BaseResultMap">
+      select <include refid="Base_Column_List" /> 
+      from menu 
+      where parent_id = #{id}  
+  </select>
+
+  <select id="getMenuListByRoleIds" parameterType="java.util.Map"  resultMap="BaseResultMap">
+	 select DISTINCT m.*
+	 from role_menu rm LEFT JOIN menu m ON rm.menu_id = m.id
+	 where m.parent_id = '0' and role_id in
+	 <foreach item="roleId" collection="roleIds" open="("  separator=","  close=")">
+	  #{roleId,jdbcType=VARCHAR}
+	 </foreach>
+  </select>
+
+<!-- 查出菜单列表-->
+  <select id="getListes" parameterType="org.com.shop.system.menu.model.Menu" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List" />
+    from menu
+  </select>
+</mapper>
